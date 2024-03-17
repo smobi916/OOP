@@ -1,0 +1,223 @@
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+
+namespace OOP_Lr1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        // Підрахунок результату першого виразу
+        private void btn11_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Отримання значень з текстових полів і конвертація до double
+                double x = Convert.ToDouble(txtX.Text);
+                double y = Convert.ToDouble(txtY.Text);
+
+                // Обчислення результату першого виразу
+                double result = Math.Pow((1 + 1 / Math.Pow(x, 2)), x) - 12 * Math.Pow(x, 2) * y;
+
+                // Виведення результату у текстове поле
+                Result1.Text = result.ToString();
+            }
+            catch (FormatException)
+            {
+                // Обробка помилок, коли введено некоректні дані
+                ClearTextBoxes();
+            }
+        }
+
+        // Очистка текстових полів
+        private void ClearTextBoxes()
+        {
+            txtX.Text = "";
+            txtY.Text = "";
+        }
+
+        // Підрахунок результату другого виразу
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Отримання значення з текстового поля і конвертація до double
+                double x = double.Parse(txtX2.Text);
+
+                // Обчислення результату другого виразу
+                double result = 2 * Math.Pow(x, 4) - 3 * Math.Pow(x, 3) + 4 * Math.Pow(x, 2) - 5 * x + 6;
+
+                // Виведення результату у текстове поле
+                R2.Text = result.ToString();
+            }
+            catch (FormatException)
+            {
+                // Обробка помилок, коли введено некоректні дані
+                txtX2.Text = "";
+            }
+        }
+
+        // Підрахунок результату третього виразу
+        private void btnabc_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Отримання значень з текстових полів і конвертація до int
+                int a = int.Parse(txtA.Text);
+                int b = int.Parse(txtB.Text);
+                int c = int.Parse(txtC.Text);
+
+                // Перевірка, чи задані числа є трійкою Піфагора
+                bool isPythagoreanTriple = c * c == a * a + b * b;
+
+                // Виведення результату у текстове поле
+                txtABC.Text = isPythagoreanTriple.ToString();
+            }
+            catch (FormatException)
+            {
+                // Обробка помилок, коли введено некоректні дані
+                ClearTextBoxes();
+            }
+        }
+
+        // Підрахунок результату четвертого виразу
+        private void btn4R_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Отримання значень з текстових полів і конвертація до double
+                double x1 = double.Parse(txtX41.Text), y1 = double.Parse(txtY41.Text), x2 = double.Parse(txtX42.Text),
+                       x3 = double.Parse(txtX43.Text), y3 = double.Parse(txtY43.Text), x4 = double.Parse(txtX44.Text);
+
+                // Обчислення ширини та висоти перетину прямокутників
+                double width = Math.Min(x2, x4) - Math.Max(x1, x3);
+                double height = Math.Min(y1, y3);
+                double intersectionArea = width <= 0 || height <= 0 ? 0 : width * height;
+
+                // Виведення результату у текстове поле
+                Result44.Text = intersectionArea > 0 ? intersectionArea.ToString() : "Прямокутники не перетинаються";
+            }
+            catch (FormatException)
+            {
+                // Обробка помилок, коли введено некоректні дані
+                ClearTextBoxes();
+                MessageBox.Show("Будь ласка, введіть числові значення.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtX41.Text = txtY41.Text = txtX42.Text = txtX43.Text = txtY43.Text = txtX44.Text = Result44.Text = "";
+            }
+        }
+
+        // Підрахунок результату п'ятого виразу
+        private void btn51_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Отримання значення з текстового поля і конвертація до int
+                int n = int.Parse(txtN.Text);
+
+                // Пошук найменшого натурального числа
+                int smallestN = FindSmallestN(n);
+
+                // Виведення результату у текстове поле
+                R51.Text = smallestN.ToString();
+            }
+            catch (FormatException)
+            {
+                // Обробка помилок, коли введено некоректні дані
+                MessageBox.Show("Будь ласка, введіть ціле число.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Пошук найменшого натурального числа
+        private int FindSmallestN(int n)
+        {
+            for (int smallestN = 1, count = 0; ; smallestN++)
+            {
+                count = 0;
+
+                // Перевірка умови для кожного числа
+                for (int i = 1; i <= Math.Pow(smallestN, 1.0 / 3); i++)
+                {
+                    for (int j = i + 1; j < smallestN; j++)
+                    {
+                        if (i * i * i + j * j * j == smallestN)
+                        {
+                            count++;
+                            break;
+                        }
+                    }
+                }
+
+                // Якщо умова виконана, повертаємо результат
+                if (count >= n)
+                    return smallestN;
+            }
+        }
+
+        // Підрахунок результату шостого виразу
+        private void btn61_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Розділення рядка на елементи, конвертація до int та розподіл по масивам
+                var elements = input.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var originalArray = Array.ConvertAll(elements, int.Parse);
+
+                var evenArray = new int[originalArray.Length / 2 + originalArray.Length % 2];
+                var oddArray = new int[originalArray.Length / 2];
+
+                // Заповнення масивів
+                for (int i = 0, j = 0, k = 0; i < originalArray.Length; i++)
+                {
+                    if (i % 2 == 0)
+                        evenArray[j++] = originalArray[i];
+                    else
+                        oddArray[k++] = originalArray[i];
+                }
+
+                // Виведення результату у текстові поля
+                output1.Text = string.Join(" ", evenArray);
+                output2.Text = string.Join(" ", oddArray);
+            }
+            catch (FormatException)
+            {
+                // Обробка помилок, коли введено некоректні дані
+                MessageBox.Show("Будь ласка, введіть числа, розділені пробілами.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Підрахунок кількості різних символів у введеному рядку
+        private void countButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Розділення рядка на символи та підрахунок кількості кожного символу
+                string input = inputTextBox.Text;
+                Dictionary<char, int> charCount = new Dictionary<char, int>();
+
+                foreach (char c in input)
+                {
+                    if (!charCount.ContainsKey(c))
+                        charCount[c] = 1;
+                    else
+                        charCount[c]++;
+                }
+
+                // Виведення результату у текстове поле
+                resultTextBox.Text = "Різні символи та їх кількість:\n";
+                foreach (var pair in charCount)
+                {
+                    resultTextBox.Text += pair.Key + ": " + pair.Value + "\n";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Обробка помилок, якщо сталася помилка при обробці введеного рядка
+                MessageBox.Show("Помилка: " + ex.Message, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    }
+}

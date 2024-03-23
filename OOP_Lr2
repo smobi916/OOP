@@ -1,0 +1,122 @@
+using System.Text; // Підключення простору імен System.Text для використання класу StringBuilder
+using System.Windows.Forms; // Підключення простору імен System.Windows.Forms для віконних елементів
+
+namespace WinFormsApp1 // Простір імен для додатку Windows Forms
+{
+    public partial class Form1 : Form // Клас форми, що успадковує клас Form
+    {
+        public Form1() // Конструктор класу форми
+        {
+            InitializeComponent(); // Ініціалізація компонентів форми
+        }
+
+        private void Form1_Load(object sender, EventArgs e) // Обробник події завантаження форми
+        {
+
+        }
+
+        // Клас, що представляє матрицю
+        public class Tmatr 
+        {
+            private int[,] matrix; // Поле для зберігання матриці
+
+            // Конструктор, який створює матрицю заданого розміру
+            public Tmatr(int rows, int cols) 
+            {
+                matrix = new int[rows, cols]; // Ініціалізація матриці заданого розміру
+            }
+
+            // Метод для встановлення значення елемента матриці за заданими індексами
+            public void SetValue(int row, int col, int value) 
+            {
+                matrix[row, col] = value; // Встановлення значення елемента матриці
+            }
+
+            // Метод для виведення на екран підматриці заданого розміру
+            public string GetSubMatrix(int startRow, int startCol, int numRows, int numCols) 
+            {
+                StringBuilder sb = new StringBuilder(); // Створення об'єкту для збирання рядків
+                for (int i = startRow; i < startRow + numRows && i < matrix.GetLength(0); i++) 
+                {
+                    for (int j = startCol; j < startCol + numCols && j < matrix.GetLength(1); j++) 
+                    {
+                        sb.Append(matrix[i, j] + "\t"); // Додавання елементів підматриці до рядка
+                    }
+                    sb.AppendLine(); // Додавання нового рядка
+                }
+                return sb.ToString(); // Повернення рядка з підматрицею
+            }
+
+            // Метод для виведення на екран всієї матриці
+            public string GetAllMatrix() 
+            {
+                StringBuilder sb = new StringBuilder(); // Створення об'єкту для збирання рядків
+                for (int i = 0; i < matrix.GetLength(0); i++) 
+                {
+                    for (int j = 0; j < matrix.GetLength(1); j++) 
+                    {
+                        sb.Append(matrix[i, j] + "\t"); // Додавання елементів матриці до рядка
+                    }
+                    sb.AppendLine(); // Додавання нового рядка
+                }
+                return sb.ToString(); // Повернення рядка з усією матрицею
+            }
+        }
+
+        // Обробник події натискання кнопки "Вивести підматрицю"
+        private void btnSubMatrix_Click(object sender, EventArgs e) 
+        {
+            try 
+            {
+                // Отримання значень рядків та стовпців для підматриці з текстових полів
+                int startRow = int.Parse(txtStartRow.Text);
+                int startCol = int.Parse(txtStartCol.Text);
+                int numRows = int.Parse(txtNumRows.Text);
+                int numCols = int.Parse(txtNumCols.Text);
+
+                Tmatr matrix = new Tmatr(3, 3); // Приклад створення матриці розміром 3x3
+                matrix.SetValue(0, 0, 1); // Встановлення значень елементів матриці
+                matrix.SetValue(0, 1, 2);
+                matrix.SetValue(0, 2, 3);
+                matrix.SetValue(1, 0, 4);
+                matrix.SetValue(1, 1, 5);
+                matrix.SetValue(1, 2, 6);
+                matrix.SetValue(2, 0, 7);
+                matrix.SetValue(2, 1, 8);
+                matrix.SetValue(2, 2, 9);
+
+                // Виведення підматриці у TextBox
+                txtResult.Text = matrix.GetSubMatrix(startRow, startCol, numRows, numCols);
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show("Помилка: " + ex.Message); // Виведення повідомлення про помилку
+            }
+        }
+
+        // Обробник події натискання кнопки "Вивести всю матрицю"
+        private void btnAllMatrix_Click(object sender, EventArgs e) 
+        {
+            try 
+            {
+                Tmatr matrix = new Tmatr(3, 3); // Приклад створення матриці розміром 3x3
+                matrix.SetValue(0, 0, 1); // Встановлення значень елементів матриці
+                matrix.SetValue(0, 1, 2);
+                matrix.SetValue(0, 2, 3);
+                matrix.SetValue(1, 0, 4);
+                matrix.SetValue(1, 1, 5);
+                matrix.SetValue(1, 2, 6);
+                matrix.SetValue(2, 0, 7);
+                matrix.SetValue(2, 1, 8);
+                matrix.SetValue(2, 2, 9);
+
+                // Виведення всієї матриці у TextBox
+                txtResult.Text = matrix.GetAllMatrix();
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show("Помилка: " + ex.Message); // Виведення повідомлення про помилку
+            }
+        }
+    }
+}

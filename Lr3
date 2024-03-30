@@ -1,0 +1,96 @@
+using System;
+using System.Windows.Forms;
+
+namespace OOP_Lr3
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void calculateButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Розбір введених операндів
+                decimal operand1 = decimal.Parse(operand1TextBox.Text);
+                decimal operand2 = decimal.Parse(operand2TextBox.Text);
+
+                // Виконання арифметичних операцій
+                Money money1 = new Money(operand1);
+                Money money2 = new Money(operand2);
+                Fraction fraction1 = new Fraction((int)operand1, 1); // Використання цілої частини для дробу
+                Fraction fraction2 = new Fraction((int)operand2, 1); // Використання цілої частини для дробу
+
+                Pair result1 = money1.ВиконатиОперацію(money2);
+                Pair result2 = fraction1.ВиконатиОперацію(fraction2);
+
+                // Відображення результатів в resultTextBox
+                resultTextBox.Text = $"{result1}\r\n{result2}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    }
+
+    // Делегат для арифметичних операцій
+    delegate Pair АрифметичнаОперація(Pair other);
+
+    // Абстрактний базовий клас Pair
+    abstract class Pair
+    {
+        // Конструктор
+        protected Pair() { }
+
+        // Виконання арифметичної операції
+        public abstract Pair ВиконатиОперацію(Pair other);
+    }
+
+    // Похідний клас Money
+    class Money : Pair
+    {
+        private decimal amount;
+
+        // Конструктор
+        public Money(decimal amount)
+        {
+            this.amount = amount;
+        }
+
+        // Арифметичні операції для Money
+        public override Pair ВиконатиОперацію(Pair other)
+        {
+            if (other.GetType() != typeof(Money))
+                throw new ArgumentException($"Неможливо виконати операцію між різними типами: {this.GetType()} та {other.GetType()}");
+
+            Money money = (Money)other;
+            return new Money(amount + money.amount);
+        }
+    }
+
+    // Похідний клас Fraction
+    class Fraction : Pair
+    {
+        private double value;
+
+        // Конструктор
+        public Fraction(int numerator, int denominator)
+        {
+            value = (double)numerator / denominator;
+        }
+
+        // Арифметичні операції для Fraction
+        public override Pair ВиконатиОперацію(Pair other)
+        {
+            if (other.GetType() != typeof(Fraction))
+                throw new ArgumentException($"Неможливо виконати операцію між різними типами: {this.GetType()} та {other.GetType()}");
+
+            Fraction fraction = (Fraction)other;
+            return new Fraction((int)(value + fraction.value), 1);
+        }
+    }
+}

@@ -1,0 +1,23 @@
+namespace OOP_Lr5
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        // Обробник події для кнопки "Count"
+        private void countButton_Click(object sender, EventArgs e)
+        {
+            // Отримуємо текст з текстового поля і переводимо його до нижнього регістру для зручності порівняння
+            string value = valueTextBox.Text.ToLower(); 
+
+            // Рахуємо кількість голосних букв у тексті
+            int vowelCount = value.Count(c => "aeiouаеёиоуыэюя".Contains(c)); 
+
+            // Виводимо результат у текстове поле
+            resultTextBox.Text = $"У рядку \"{value}\" {vowelCount} голосних букв."; 
+        }
+    }
+}

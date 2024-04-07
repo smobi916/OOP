@@ -1,0 +1,45 @@
+namespace OOP_Lr6
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void btn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Зчитуємо значення з текстових полів
+                double x = double.Parse(txtX.Text);
+                double y = double.Parse(txtY.Text);
+
+                // Розраховуємо модуль (радіус) та аргумент (кут) комплексного числа
+                double r = Math.Sqrt(x * x + y * y);
+                double angle = Math.Atan2(y, x);
+
+                // Перетворюємо аргумент у градуси (опціонально)
+                double angleDegrees = angle * (180.0 / Math.PI);
+
+                // Формуємо строку з результатом у тригонометричній формі
+                string resultText = $"Результат у тригонометричній формі:\nМодуль (радіус): {r}\nАргумент (кут) у градусах: {angleDegrees}";
+
+                // Виводимо результат у текстове поле
+                Result.Text = resultText;
+            }
+            catch (FormatException)
+            {
+                // Виводимо повідомлення про помилку, якщо користувач ввів нечислове значення
+                MessageBox.Show("Будь ласка, введіть числове значення для обох полів.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                // Очищуємо текстові поля
+                txtX.Clear();
+                txtY.Clear();
+
+                // Переносимо фокус на перше текстове поле
+                txtX.Focus();
+            }
+        }
+    }
+}

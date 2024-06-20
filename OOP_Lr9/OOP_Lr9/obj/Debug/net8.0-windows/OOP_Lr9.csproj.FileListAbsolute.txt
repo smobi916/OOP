@@ -1,0 +1,16 @@
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\obj\Debug\net8.0-windows\ParametricCurvePlotter.Form1.resources
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\obj\Debug\net8.0-windows\OOP_Lr9.csproj.GenerateResource.cache
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\obj\Debug\net8.0-windows\OOP_Lr9.GeneratedMSBuildEditorConfig.editorconfig
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\obj\Debug\net8.0-windows\OOP_Lr9.AssemblyInfoInputs.cache
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\obj\Debug\net8.0-windows\OOP_Lr9.AssemblyInfo.cs
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\obj\Debug\net8.0-windows\OOP_Lr9.csproj.CoreCompileInputs.cache
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\bin\Debug\net8.0-windows\OOP_Lr9.exe
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\bin\Debug\net8.0-windows\OOP_Lr9.deps.json
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\bin\Debug\net8.0-windows\OOP_Lr9.runtimeconfig.json
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\bin\Debug\net8.0-windows\OOP_Lr9.dll
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\bin\Debug\net8.0-windows\OOP_Lr9.pdb
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\obj\Debug\net8.0-windows\OOP_Lr9.dll
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\obj\Debug\net8.0-windows\refint\OOP_Lr9.dll
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\obj\Debug\net8.0-windows\OOP_Lr9.pdb
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\obj\Debug\net8.0-windows\OOP_Lr9.genruntimeconfig.cache
+F:\ООП\Проекти\OOP_Lr9\OOP_Lr9\obj\Debug\net8.0-windows\ref\OOP_Lr9.dll

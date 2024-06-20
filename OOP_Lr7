@@ -1,0 +1,212 @@
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.IO;
+using System.Text.RegularExpressions;
+
+public class MultiWindowTextEditor : Form
+{
+    private RichTextBox richTextBox;
+    private MenuStrip menuStrip;
+    private ToolStrip toolStrip;
+    private ToolStripComboBox toolStripComboBoxFonts;
+    private ToolStripComboBox toolStripComboBoxLanguages;
+    private ToolStripButton toolStripButtonAlignLeft;
+    private ToolStripButton toolStripButtonAlignCenter;
+    private ToolStripButton toolStripButtonAlignRight;
+    private ToolStripButton toolStripButtonBold;
+    private ToolStripButton toolStripButtonItalic;
+    private ToolStripButton toolStripButtonUnderline;
+    private ToolStripButton toolStripButtonAddImage;
+    private ToolStripButton toolStripButtonHighlightSyntax;
+
+    public MultiWindowTextEditor()
+    {
+        InitializeComponent();
+    }
+
+    private void InitializeComponent()
+    {
+        // Initialize components
+        richTextBox = new RichTextBox { Dock = DockStyle.Fill, AcceptsTab = true, DetectUrls = true };
+        menuStrip = new MenuStrip();
+        toolStrip = new ToolStrip();
+        toolStripComboBoxFonts = new ToolStripComboBox();
+        toolStripComboBoxLanguages = new ToolStripComboBox();
+        toolStripButtonAlignLeft = new ToolStripButton("L");
+        toolStripButtonAlignCenter = new ToolStripButton("C");
+        toolStripButtonAlignRight = new ToolStripButton("R");
+        toolStripButtonBold = new ToolStripButton("B");
+        toolStripButtonItalic = new ToolStripButton("I");
+        toolStripButtonUnderline = new ToolStripButton("U");
+        toolStripButtonAddImage = new ToolStripButton("Img");
+        toolStripButtonHighlightSyntax = new ToolStripButton("Syntax");
+
+        // MenuStrip Configuration
+        var fileMenu = new ToolStripMenuItem("File");
+        var saveMenuItem = new ToolStripMenuItem("Save", null, SaveFile);
+        var openMenuItem = new ToolStripMenuItem("Open", null, OpenFile);
+        var newMenuItem = new ToolStripMenuItem("New", null, NewFile);
+
+        fileMenu.DropDownItems.Add(newMenuItem);
+        fileMenu.DropDownItems.Add(openMenuItem);
+        fileMenu.DropDownItems.Add(saveMenuItem);
+        menuStrip.Items.Add(fileMenu);
+
+        // ToolStrip Configuration
+        foreach (FontFamily font in FontFamily.Families)
+        {
+            toolStripComboBoxFonts.Items.Add(font.Name);
+        }
+        toolStripComboBoxFonts.SelectedIndexChanged += (s, e) => ChangeFontFamily(toolStripComboBoxFonts.Text);
+
+        toolStripComboBoxLanguages.Items.AddRange(new string[] { "English", "Українська" });
+        toolStripComboBoxLanguages.SelectedIndexChanged += (s, e) => ChangeLanguage(toolStripComboBoxLanguages.Text);
+
+        toolStrip.Items.Add(toolStripComboBoxFonts);
+        toolStrip.Items.Add(toolStripComboBoxLanguages);
+        toolStrip.Items.Add(toolStripButtonAlignLeft);
+        toolStrip.Items.Add(toolStripButtonAlignCenter);
+        toolStrip.Items.Add(toolStripButtonAlignRight);
+        toolStrip.Items.Add(toolStripButtonBold);
+        toolStrip.Items.Add(toolStripButtonItalic);
+        toolStrip.Items.Add(toolStripButtonUnderline);
+        toolStrip.Items.Add(toolStripButtonAddImage);
+        toolStrip.Items.Add(toolStripButtonHighlightSyntax);
+
+        toolStripButtonAlignLeft.Click += (s, e) => richTextBox.SelectionAlignment = HorizontalAlignment.Left;
+        toolStripButtonAlignCenter.Click += (s, e) => richTextBox.SelectionAlignment = HorizontalAlignment.Center;
+        toolStripButtonAlignRight.Click += (s, e) => richTextBox.SelectionAlignment = HorizontalAlignment.Right;
+        toolStripButtonBold.Click += (s, e) => ToggleFontStyle(FontStyle.Bold);
+        toolStripButtonItalic.Click += (s, e) => ToggleFontStyle(FontStyle.Italic);
+        toolStripButtonUnderline.Click += (s, e) => ToggleFontStyle(FontStyle.Underline);
+        toolStripButtonAddImage.Click += AddImage;
+        toolStripButtonHighlightSyntax.Click += HighlightSyntax;
+
+        // Form Configuration
+        this.Controls.Add(richTextBox);
+        this.Controls.Add(toolStrip);
+        this.Controls.Add(menuStrip);
+        this.MainMenuStrip = menuStrip;
+        this.Text = "Multi-Window Text Editor";
+        this.WindowState = FormWindowState.Maximized;
+    }
+
+    private void NewFile(object sender, EventArgs e)
+    {
+        richTextBox.Clear();
+    }
+
+    private void OpenFile(object sender, EventArgs e)
+    {
+        using (OpenFileDialog openFileDialog = new OpenFileDialog())
+        {
+            openFileDialog.Filter = "Rich Text Files|*.rtf";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                richTextBox.LoadFile(openFileDialog.FileName);
+            }
+        }
+    }
+
+    private void SaveFile(object sender, EventArgs e)
+    {
+        using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+        {
+            saveFileDialog.Filter = "Rich Text Files|*.rtf";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                richTextBox.SaveFile(saveFileDialog.FileName);
+            }
+        }
+    }
+
+    private void ChangeFontFamily(string fontFamily)
+    {
+        if (!string.IsNullOrEmpty(fontFamily))
+        {
+            richTextBox.SelectionFont = new Font(fontFamily, richTextBox.SelectionFont.Size);
+        }
+    }
+
+    private void ToggleFontStyle(FontStyle style)
+    {
+        if (richTextBox.SelectionFont != null)
+        {
+            FontStyle newStyle = richTextBox.SelectionFont.Style ^ style;
+            richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, newStyle);
+        }
+    }
+
+    private void AddImage(object sender, EventArgs e)
+    {
+        using (OpenFileDialog openFileDialog = new OpenFileDialog())
+        {
+            openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Image img = Image.FromFile(openFileDialog.FileName);
+                Clipboard.SetImage(img);
+                richTextBox.Paste();
+            }
+        }
+    }
+
+    private void HighlightSyntax(object sender, EventArgs e)
+    {
+        string keywords = @"\b(if|else|while|for|foreach|return|public|private|protected|class|static|void|int|string|bool|new|using|namespace)\b";
+        MatchCollection keywordMatches = Regex.Matches(richTextBox.Text, keywords);
+
+        int originalIndex = richTextBox.SelectionStart;
+        int originalLength = richTextBox.SelectionLength;
+        Color originalColor = Color.Black;
+
+        richTextBox.SelectAll();
+        richTextBox.SelectionColor = originalColor;
+
+        foreach (Match m in keywordMatches)
+        {
+            richTextBox.Select(m.Index, m.Length);
+            richTextBox.SelectionColor = Color.Blue;
+        }
+
+        richTextBox.SelectionStart = originalIndex;
+        richTextBox.SelectionLength = originalLength;
+        richTextBox.SelectionColor = originalColor;
+    }
+
+    private void ChangeLanguage(string language)
+    {
+        // Language change logic (simple example)
+        if (language == "English")
+        {
+            toolStripButtonAlignLeft.Text = "L";
+            toolStripButtonAlignCenter.Text = "C";
+            toolStripButtonAlignRight.Text = "R";
+            toolStripButtonBold.Text = "B";
+            toolStripButtonItalic.Text = "I";
+            toolStripButtonUnderline.Text = "U";
+            toolStripButtonAddImage.Text = "Img";
+            toolStripButtonHighlightSyntax.Text = "Syntax";
+        }
+        else if (language == "Українська")
+        {
+            toolStripButtonAlignLeft.Text = "Л";
+            toolStripButtonAlignCenter.Text = "Ц";
+            toolStripButtonAlignRight.Text = "П";
+            toolStripButtonBold.Text = "Ж";
+            toolStripButtonItalic.Text = "К";
+            toolStripButtonUnderline.Text = "П";
+            toolStripButtonAddImage.Text = "Зобр";
+            toolStripButtonHighlightSyntax.Text = "Синт";
+        }
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        Application.Run(new MultiWindowTextEditor());
+    }
+}
